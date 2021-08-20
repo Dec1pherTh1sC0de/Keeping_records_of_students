@@ -23,6 +23,7 @@ form1::form1(QWidget *parent) :
     ui->widget_5->setVisible(false);
     ui->widget_6->setVisible(false);
     ui->widget_7->setVisible(false);
+    ui->widget_8->setVisible(false);
     this->resize(301,150);
     this->ui->menubar->setVisible(false);
     this->ui->frame->setVisible(false);
@@ -1691,7 +1692,23 @@ void form1::on_pushButton_15_clicked()
 //Перевод студентов
 void form1::on_pushButton_4_clicked()
 {
-
+    ui->widget_8->setVisible(true);
+    ui->widget_8->move(0,0);
+    //Курсы
+    ui->comboBox_12->clear();
+    ui->comboBox_12->addItem("-",0);
+    ui->comboBox_12->addItem("1",1);
+    ui->comboBox_12->addItem("2",2);
+    ui->comboBox_12->addItem("3",3);
+    ui->comboBox_12->addItem("4",4);
+    //Специальности
+    ui->comboBox_14->clear();
+    ui->comboBox_14->addItem("-",0);
+    ui->comboBox_14->addItem("Мелиорация и водное хозяйство",1);
+    ui->comboBox_14->addItem("Техническое обеспечение мелиоративных и водохозяйственных работ",2);
+    ui->comboBox_14->addItem("Ремонтно-обслуживающее производство в сельском хозяйстве",3);
+    ui->comboBox_14->addItem("Промышленное и гражданское строительство",4);
+    ui->comboBox_14->addItem("Строительство дорог и транспортных объектов",5);
 }
 
 //Подтверждение смены логина администратора
@@ -1969,9 +1986,6 @@ void form1::on_action_7_triggered()
 //Мелиорация и водное хозяйство 1 курс
 void form1::on_action1_5_triggered()
 {
-    model = new QSqlTableModel(this,sdb);
-    model->setTable("my_table");
-    model->select();
 
 }
 
@@ -1991,5 +2005,119 @@ void form1::on_action3_4_triggered()
 void form1::on_action4_4_triggered()
 {
 
+}
+
+//Перевод студента на другой курс или в другую группу
+void form1::on_pushButton_24_clicked()
+{
+    model = new QSqlTableModel(this,sdb);
+    model->setTable("my_table");
+    model->select();
+    //Проверка на пустые поля
+    if(ui->lineEdit_25->text() == NULL)
+    {
+        QMessageBox::information(this,"Внимание","Введите номер приказа!",QMessageBox::Ok);
+    }else
+    {
+        if(ui->lineEdit_26->text() == NULL)
+        {
+            QMessageBox::information(this,"Внимание","Введите номер группы!",QMessageBox::Ok);
+        }else
+        {
+            //Изменение специальности
+            if(ui->comboBox_14->currentText() == "-")
+            {
+            }
+            if(ui->comboBox_14->currentText() == "Мелиорация и водное хозяйство")
+            {
+                model->setData(model->index(row, 1), ui->comboBox_14->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_14->currentText() == "Техническое обеспечение мелиоративных и водохозяйственных работ")
+            {
+                model->setData(model->index(row, 1), ui->comboBox_14->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_14->currentText() == "Ремонтно-обслуживающее производство в сельском хозяйстве")
+            {
+                model->setData(model->index(row, 1), ui->comboBox_14->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_14->currentText() == "Промышленное и гражданское строительство")
+            {
+                model->setData(model->index(row, 1), ui->comboBox_14->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_14->currentText() == "Строительство дорог и транспортных объектов")
+            {
+                model->setData(model->index(row, 1), ui->comboBox_14->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            //Изменение курса
+            if(ui->comboBox_12->currentText() == "-")
+            {
+            }
+            if(ui->comboBox_12->currentText() == "1")
+            {
+                model->setData(model->index(row, 4), ui->comboBox_12->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_12->currentText() == "2")
+            {
+                model->setData(model->index(row, 4), ui->comboBox_12->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_12->currentText() == "3")
+            {
+                model->setData(model->index(row, 4), ui->comboBox_12->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            if(ui->comboBox_12->currentText() == "4")
+            {
+                model->setData(model->index(row, 4), ui->comboBox_12->currentText());
+                model->submitAll();
+                model->select();
+                ui->tableView->setModel(model);
+            }
+            //Вставка номера группы
+            model->setData(model->index(row, 5), ui->lineEdit_26->text());
+            //Вставка номера приказа
+            model->setData(model->index(row, 27), ui->lineEdit_25->text());
+            //Вставка даты перевода
+            model->setData(model->index(row, 28), ui->dateEdit_3->text());
+            model->submitAll();
+            model->select();
+            ui->tableView->setModel(model);
+            ui->widget_8->setVisible(false);
+            ui->lineEdit_25->clear();
+            ui->lineEdit_26->clear();
+            //Вывод данных в статусбар
+            this->statusBar()->showMessage(tr("Данные пользователя изменены"));
+        }
+    }
+}
+
+//Отмена перевода студента
+void form1::on_pushButton_25_clicked()
+{
+    ui->widget_8->setVisible(false);
+    ui->lineEdit_25->clear();
+    ui->lineEdit_26->clear();
 }
 
