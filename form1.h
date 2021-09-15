@@ -96,6 +96,8 @@ private slots:
 
     void on_pushButton_25_clicked();
 
+    void on_action_13_triggered();
+
 public:
     Ui::form1 *ui;
     //Событие закрытия окна

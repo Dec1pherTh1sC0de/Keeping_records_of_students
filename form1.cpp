@@ -110,7 +110,6 @@ form1::form1(QWidget *parent) :
         if (!c) {
             qDebug() << "Видимо таблица otchislen уже созданна";
         }
-
         //Создание таблицы с данными авторизации
         QString str3 = "CREATE TABLE autorize ("
                 "ID integer PRIMARY KEY NOT NULL, "
@@ -122,7 +121,6 @@ form1::form1(QWidget *parent) :
         if (!d) {
             qDebug() << "Видимо таблица autorize уже созданна";
         }
-
 }
 
 form1::~form1()
@@ -145,6 +143,8 @@ std::string encrypt(std::string input) {
     std::string str(word.begin(), word.end());
     return str;
 }
+//Номер разрешения на изменение данных в таблице 1 - разрешить, 2 - запретить
+qint32 change_tabel = 2;
 
 //Номер таблицы 1-неотчисленные, 2-отчисленные
 qint32 num_table;
@@ -209,7 +209,6 @@ void form1::on_action_2_triggered()
 {
     this->ui->widget_7->setVisible(true);
     this->ui->widget_7->move(0,0);
-
 }
 
 //Смена логина админа
@@ -245,7 +244,6 @@ void form1::on_action960x720_triggered()
     this->ui->pushButton_6->move(787,0);
     this->ui->pushButton_11->move(700,0);
     this->ui->tableView->resize(960,631);
-
 }
 
 void form1::on_action1024x768_triggered()
@@ -462,10 +460,10 @@ void form1::on_action_3_triggered()
     ui->comboBox_13->addItem("Нет",2);
 }
 
-//Вызов настроек справочника функция появится в дальнейшем
+//Вызов настроек справочника
 void form1::on_action_11_triggered()
 {
-
+    //Функция появится в дальнейшем
 }
 
 //Отмена добавления студента
@@ -1277,7 +1275,7 @@ void form1::on_pushButton_11_clicked()
     QMessageBox::information(this,"Просмотр",s,QMessageBox::Ok);
 }
 
-//Отчисление
+//Вызов виджета для отчисления
 void form1::on_pushButton_clicked()
 {
     this->ui->widget->setVisible(true);
@@ -1318,7 +1316,6 @@ void form1::on_action_12_triggered()
         ui->tableView->setModel(model);
         this->statusBar()->showMessage(tr("Просмотр отчисленных студентов"));
     }
-
 }
 
 //Показывает всех неотчисленных студентов
@@ -1359,88 +1356,94 @@ void form1::on_action_10_triggered()
 //Отчислить
 void form1::on_pushButton_12_clicked()
 {
-    //Получение данных из колонок выделенной строки строки
-    model = new QSqlTableModel(this,sdb);
-    model->setTable("my_table");
-    model->select();
-    QString a1 = model->data(model->index(this->ui->tableView->currentIndex().row(), 1)).toString();
-    QString a2 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 2)).toString();
-    QString a3 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 3)).toString();
-    QString a4 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 4)).toString();
-    QString a5 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 5)).toString();
-    QString a6 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 6)).toString();
-    QString a7 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 7)).toString();
-    QString a8 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 8)).toString();
-    QString a9 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 9)).toString();
-    QString a10 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 10)).toString();
-    QString a11 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 11)).toString();
-    QString a12 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 12)).toString();
-    QString a13 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 13)).toString();
-    QString a14 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 14)).toString();
-    QString a15 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 15)).toString();
-    QString a16 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 16)).toString();
-    QString a17 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 17)).toString();
-    QString a18 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 18)).toString();
-    QString a19 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 19)).toString();
-    QString a20 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 20)).toString();
-    QString a21 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 21)).toString();
-    QString a22 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 22)).toString();
-    QString a23 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 23)).toString();
-    QString a24 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 24)).toString();
-    QString a25 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 25)).toString();
-    QString a26 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 26)).toString();
-    //Удаление отчисленного студента из основной таблицы
-    model = new QSqlTableModel(this,sdb);
-    model->setTable("my_table");
-    model->select();
-    model->removeRow(row);
-    //Обновление таблицы с данными
-    model = new QSqlTableModel(this,sdb);
-    model->setTable("otchislen");
-    model->select();
-    //Вставка пустой строки
-    model->insertRow(row);
-    //Вставка данных
-    model->setData(model->index(row, 1), a1);
-    model->setData(model->index(row, 2), a2);
-    model->setData(model->index(row, 3), a3);
-    model->setData(model->index(row, 4), a4);
-    model->setData(model->index(row, 5), a5);
-    model->setData(model->index(row, 6), a6);
-    model->setData(model->index(row, 7), a7);
-    model->setData(model->index(row, 8), a8);
-    model->setData(model->index(row, 9), a9);
-    model->setData(model->index(row, 10), a10);
-    model->setData(model->index(row, 11), a11);
-    model->setData(model->index(row, 12), a12);
-    model->setData(model->index(row, 13), a13);
-    model->setData(model->index(row, 14), a14);
-    model->setData(model->index(row, 15), a15);
-    model->setData(model->index(row, 16), a16);
-    model->setData(model->index(row, 17), a17);
-    model->setData(model->index(row, 18), a18);
-    model->setData(model->index(row, 19), a19);
-    model->setData(model->index(row, 20), a20);
-    model->setData(model->index(row, 21), a21);
-    model->setData(model->index(row, 22), a22);
-    model->setData(model->index(row, 23), a23);
-    model->setData(model->index(row, 24), a24);
-    model->setData(model->index(row, 25), a25);
-    model->setData(model->index(row, 26), a26);
-    model->setData(model->index(row, 27), this->ui->lineEdit_12->text());
-    model->setData(model->index(row, 28), this->ui->dateEdit_2->text());
-    //Подтверждение вставки
-    model->submitAll();
-    //Отображение данных
-    model->select();
-    this->ui->tableView->setModel(model);
-    //Вывод данных в статусбар
-    this->statusBar()->showMessage(tr("Студент отчислен"));
-    //Скрытие ненужных элементов
-    this->ui->widget->setVisible(false);
-    this->ui->pushButton_4->setVisible(false);
-    this->ui->lineEdit_12->clear();
-    this->ui->dateEdit_2->clear();
+    if(ui->lineEdit_12->text() == NULL)
+    {
+        QMessageBox::information(this,"Внимание","Введите номер приказа!",QMessageBox::Ok);
+    }else
+    {
+        //Получение данных из колонок выделенной строки строки
+        model = new QSqlTableModel(this,sdb);
+        model->setTable("my_table");
+        model->select();
+        QString a1 = model->data(model->index(this->ui->tableView->currentIndex().row(), 1)).toString();
+        QString a2 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 2)).toString();
+        QString a3 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 3)).toString();
+        QString a4 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 4)).toString();
+        QString a5 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 5)).toString();
+        QString a6 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 6)).toString();
+        QString a7 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 7)).toString();
+        QString a8 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 8)).toString();
+        QString a9 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 9)).toString();
+        QString a10 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 10)).toString();
+        QString a11 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 11)).toString();
+        QString a12 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 12)).toString();
+        QString a13 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 13)).toString();
+        QString a14 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 14)).toString();
+        QString a15 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 15)).toString();
+        QString a16 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 16)).toString();
+        QString a17 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 17)).toString();
+        QString a18 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 18)).toString();
+        QString a19 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 19)).toString();
+        QString a20 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 20)).toString();
+        QString a21 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 21)).toString();
+        QString a22 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 22)).toString();
+        QString a23 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 23)).toString();
+        QString a24 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 24)).toString();
+        QString a25 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 25)).toString();
+        QString a26 = model->data(this->model->index(this->ui->tableView->currentIndex().row(), 26)).toString();
+        //Удаление отчисленного студента из основной таблицы
+        model = new QSqlTableModel(this,sdb);
+        model->setTable("my_table");
+        model->select();
+        model->removeRow(row);
+        //Обновление таблицы с данными
+        model = new QSqlTableModel(this,sdb);
+        model->setTable("otchislen");
+        model->select();
+        //Вставка пустой строки
+        model->insertRow(row);
+        //Вставка данных
+        model->setData(model->index(row, 1), a1);
+        model->setData(model->index(row, 2), a2);
+        model->setData(model->index(row, 3), a3);
+        model->setData(model->index(row, 4), a4);
+        model->setData(model->index(row, 5), a5);
+        model->setData(model->index(row, 6), a6);
+        model->setData(model->index(row, 7), a7);
+        model->setData(model->index(row, 8), a8);
+        model->setData(model->index(row, 9), a9);
+        model->setData(model->index(row, 10), a10);
+        model->setData(model->index(row, 11), a11);
+        model->setData(model->index(row, 12), a12);
+        model->setData(model->index(row, 13), a13);
+        model->setData(model->index(row, 14), a14);
+        model->setData(model->index(row, 15), a15);
+        model->setData(model->index(row, 16), a16);
+        model->setData(model->index(row, 17), a17);
+        model->setData(model->index(row, 18), a18);
+        model->setData(model->index(row, 19), a19);
+        model->setData(model->index(row, 20), a20);
+        model->setData(model->index(row, 21), a21);
+        model->setData(model->index(row, 22), a22);
+        model->setData(model->index(row, 23), a23);
+        model->setData(model->index(row, 24), a24);
+        model->setData(model->index(row, 25), a25);
+        model->setData(model->index(row, 26), a26);
+        model->setData(model->index(row, 27), this->ui->lineEdit_12->text());
+        model->setData(model->index(row, 28), this->ui->dateEdit_2->text());
+        //Подтверждение вставки
+        model->submitAll();
+        //Отображение данных
+        model->select();
+        this->ui->tableView->setModel(model);
+        //Вывод данных в статусбар
+        this->statusBar()->showMessage(tr("Студент отчислен"));
+        //Скрытие ненужных элементов
+        this->ui->widget->setVisible(false);
+        this->ui->pushButton_4->setVisible(false);
+        this->ui->lineEdit_12->clear();
+        this->ui->dateEdit_2->clear();
+    }
 }
 
 //Отмена отчисления
@@ -1557,12 +1560,10 @@ void form1::on_pushButton_14_clicked()
         }else
         {
             QMessageBox::information(this,"Ошибка","Неверный пароль!",QMessageBox::Ok);
-            //Закрываем файл и поток
         }
     }else
     {
         QMessageBox::information(this,"Ошибка","Неверный логин!",QMessageBox::Ok);
-        //Закрываем файл и поток
     }
 }
 
@@ -1689,7 +1690,7 @@ void form1::on_pushButton_15_clicked()
     }
 }
 
-//Перевод студентов
+//Вызов виджета для перевод студентов
 void form1::on_pushButton_4_clicked()
 {
     ui->widget_8->setVisible(true);
@@ -1975,11 +1976,11 @@ void form1::on_pushButton_22_clicked()
     }
 }
 
-//Изменить данные в таблице
+//Разрешение редактирования данных в таблице
 void form1::on_action_7_triggered()
 {
-    this->statusBar()->showMessage(tr("Изменение данных разрешено!!!"));
-    this->ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        this->statusBar()->showMessage(tr("Изменение данных разрешено!!!"));
+        this->ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 }
 
 //Сортировка по специальностям
@@ -2108,7 +2109,7 @@ void form1::on_pushButton_24_clicked()
             ui->lineEdit_25->clear();
             ui->lineEdit_26->clear();
             //Вывод данных в статусбар
-            this->statusBar()->showMessage(tr("Данные пользователя изменены"));
+            this->statusBar()->showMessage(tr("Студент переведен"));
         }
     }
 }
@@ -2119,5 +2120,12 @@ void form1::on_pushButton_25_clicked()
     ui->widget_8->setVisible(false);
     ui->lineEdit_25->clear();
     ui->lineEdit_26->clear();
+}
+
+//Запретить редактировать данные в таблице
+void form1::on_action_13_triggered()
+{
+    this->ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    this->statusBar()->showMessage(tr("Изменение данных запрещенно!!!"));
 }
 
